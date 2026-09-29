@@ -1,0 +1,2 @@
+# Scripts shell sempre LF (WSL/Linux) — evita erro "set: +" e $'\r'
+*.sh text eol=lf

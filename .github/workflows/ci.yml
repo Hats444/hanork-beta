@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  hygiene-and-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Repo hygiene
+        run: |
+          test -f README.md
+          test -f LICENSE
+          test -f .env.example
+          test -f package.json
+          test ! -f .env
+          ! git ls-files | grep -E '(^|/)\.env$'
+          ! git ls-files | grep -Ei '\.(pem|p12)$'
+          test -z "$(git ls-files '*.md' | grep -v '^README.md$' || true)"
+
+      - name: Syntax check (core)
+        run: |
+          node --check index.js
+          node --check telegramBot.js
+          node --check connection.js
+          node --check handlers/messageHandler.js
+          node --check core/router/universalRouter.js
+          node --check utils/phoneTarget.js
+          node --check commands/exploits.js
+
+      - name: Phone parse smoke
+        run: |
+          node -e "
+          const { parsePhoneAndQty, peelPhoneAndRest } = require('./utils/phoneTarget');
+          const p = parsePhoneAndQty('+55 11 90000-0000 1', { defaultQty: 10 });
+          if (!p || p.digits !== '5511900000000' || p.quantidade !== 1) {
+            console.error(p); process.exit(1);
+          }
+          const pe = peelPhoneAndRest('+55 11 99999-9999 ola');
+          if (!pe || pe.rest !== 'ola') { console.error(pe); process.exit(1); }
+          console.log('phoneTarget OK');
+          "
+
+      - name: Zero Two catalog coverage
+        run: npm run zt:smoke
+        env:
+          ZEROTWO_API_KEY: dummy-for-load-only

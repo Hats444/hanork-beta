@@ -1,0 +1,54 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: hanork-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - hanork_redis:/data
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  hanork:
+    build: .
+    container_name: hanork-beta
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      HEALTH_HOST: "0.0.0.0"
+      HEALTH_PORT: "3847"
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      ENABLE_BULL: ${ENABLE_BULL:-1}
+      # Ollama no host (Linux). No Docker Desktop use host.docker.internal
+      OLLAMA_HOST: ${OLLAMA_HOST:-http://host.docker.internal:11434}
+    ports:
+      - "3847:3847"
+    volumes:
+      - ./data:/app/data
+      - ./assets:/app/assets:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3847/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 45s
+
+volumes:
+  hanork_redis:

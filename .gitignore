@@ -1,0 +1,132 @@
+# secrets & env
+.env
+.env.*
+!.env.example
+
+# dependencies
+node_modules/
+
+# runtime / user data (privacy + size)
+data/*
+!data/.gitkeep
+auth_info*/
+sessions/
+session/
+database/
+
+# local agent / IDE scratch
+.cursor/
+.devin/
+backup/
+tmp-hostlogs/
+/node
+
+# logs & caches
+logs/*
+!logs/.gitkeep
+*.log
+.cache/
+tmp/
+temp/
+*.tmp
+*.bak
+*.zip
+*.apk
+*.sqlite*
+*.db
+*.db-*
+*.jsonl
+creds.json
+.bot-state.json
+google-services.json
+*.jks
+*.keystore
+shared/zero-ipc*/
+produtos/
+backups/
+auth*/
+*.log
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# media / downloads scratch
+downloads/
+media/tmp/
+*.mp3
+*.mp4
+*.webp
+!assets/**
+
+# coverage / build
+coverage/
+dist/
+build/
+
+# docs internos / prompts (documentacao publica fica so no README.md)
+docs/*
+DESCRICAO.md
+RESUMO-PARA-CELULAR.md
+hanork-beta.md
+Leiaestaporra/
+core/router/README.md
+RELATORIO_*.md
+AUDITORIA_COMPLETA_*.md
+AUDITORIA*.md
+AUDIT_REPORT.md
+BAILEYS*.md
+PROTECAO*.md
+ZT-API*.md
+RAIKKEN*.md
+*.js.bak
+mnt/
+/home/
+
+# scripts de probe/smoke/host locais (podem depender de .env)
+scripts/probe-*.js
+scripts/host-*.js
+scripts/scan-host-*.js
+scripts/_*
+scripts/*-smoke.js
+scripts/smoke-*.js
+scripts/tg-ping-admin.js
+scripts/install-test-btch.sh
+scripts/wsu-fix-start.sh
+scripts/wsl-fix-start.sh
+scripts/menu-*-probe.js
+scripts/zt-ia-probe.js
+scripts/zt-consultas-probe.js
+scripts/zt-checklist-build.js
+scripts/heal-owners-lid.js
+scripts/deploy-raikken.js
+
+# brand assets locais (opcional)
+brand/
+
+# dumps da host / arquivos enormes
+hanork/
+*.tar.gz
+models/*.gguf
+bin/llama/
+
+# one-off / lixo da pasta local
+oi.json
+deploy-fix.js
+deploy-lock-fix.js
+fix-lock.js
+force-fix.js
+test_consultas.js
+test_webintel.js
+hanork-bot@2.0.0
+*.bak-patch
+commands/divulgar/*.json
+
+# CI precisa destes (nao sao probe de host)
+!scripts/zt-coverage-smoke.js
+!scripts/zt-catalog-build.js
+!scripts/commands-schema-build.js

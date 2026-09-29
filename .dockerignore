@@ -1,0 +1,19 @@
+# Ignorar no build (contexto menor + sem secrets)
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+node_modules
+data
+session
+sessions
+logs
+*.zip
+*.bak
+RELATORIO_*.md
+AUDITORIA_COMPLETA_*.md
+AUDIT_REPORT.md
+.devin
+.cursor
+backup
